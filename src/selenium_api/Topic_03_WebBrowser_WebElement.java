@@ -86,9 +86,7 @@ public class Topic_03_WebBrowser_WebElement {
 		driver.findElement(interestsDevelopment).click();
 		Assert.assertFalse(isControlSelected(interestsDevelopment));
 	
-		if (isControlSelected(interestsDevelopment)) {
-			System.out.println("Element [" + interestsDevelopment + "] is selected");
-		} else {
+		if (!isControlSelected(interestsDevelopment)) {
 			driver.findElement(interestsDevelopment).click();
 
 		}
