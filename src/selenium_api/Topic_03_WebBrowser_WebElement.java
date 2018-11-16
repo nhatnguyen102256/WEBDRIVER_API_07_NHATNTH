@@ -73,29 +73,26 @@ public class Topic_03_WebBrowser_WebElement {
 
 	@Test
 	public void TC03_Components_Selected() {
-		// Step 01 - Truy cập vào trang:
-		// https://daominhdam.github.io/basic-form/index.html
+
 		// Step 02 - Click chọn Age (Under 18)/ Interests (Development)
-		// Step 03 - Kiểm tra các phần tử tại Step 02 đã được chọn
-		// Step 04 - Nếu chưa được chọn thì cho phép chọn lại 1 lần nữa
 		driver.findElement(ageUnder18Radio).click();
 		driver.findElement(interestsDevelopment).click();
-		if (isControlSelected(ageUnder18Radio)) {
-			System.out.println("Element [" + ageUnder18Radio + "] is selected");
-		} 
-		else {
-			driver.findElement(ageUnder18Radio).click();
-			
-		}
+
+		Assert.assertTrue(isControlSelected(ageUnder18Radio));
+		Assert.assertTrue(isControlSelected(interestsDevelopment));
+
+		// Click để bỏ chọn interestsDevelopment
 		
+		driver.findElement(interestsDevelopment).click();
+		Assert.assertFalse(isControlSelected(interestsDevelopment));
+	
 		if (isControlSelected(interestsDevelopment)) {
 			System.out.println("Element [" + interestsDevelopment + "] is selected");
-		} 
-		else {
+		} else {
 			driver.findElement(interestsDevelopment).click();
-			
+
 		}
-		
+
 	}
 
 	@AfterClass
