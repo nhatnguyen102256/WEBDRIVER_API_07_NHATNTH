@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -18,13 +19,16 @@ import org.testng.annotations.Test;
 public class Topic_05_Handle_Dropdownlist {
 	WebDriver driver;
 	WebDriverWait waitExplicit;
+	JavascriptExecutor JavaExecutor;
 
 	@BeforeClass
 	public void beforeClass() {
 		driver = new FirefoxDriver();
 		waitExplicit = new WebDriverWait(driver, 30);
+		JavaExecutor = (JavascriptExecutor) driver;
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+
 
 	}
 
@@ -45,38 +49,48 @@ public class Topic_05_Handle_Dropdownlist {
 		// Kiểm tra dropdownlist có bn options
 		Assert.assertEquals(select.getOptions().size(), 5);
 	}
+
 	@Test
-	public void TC_02_Jquery_Dropdown() {
+	public void TC_02_Jquery_Dropdown() throws Exception {
 		driver.get("http://jqueryui.com/resources/demos/selectmenu/default.html");
+		selectItemInCustomDropdown("//span[@id='number-button']", "//ul[@id='number-menu']//li[@class='ui-menu-item']/div", "19");
+		Assert.assertTrue(driver.findElement(By.xpath("//span[@id='number-button']//span[@class='ui-selectmenu-text' and text()='19']")).isDisplayed());
+		Thread.sleep(3000);
 
+		driver.get("https://demos.telerik.com/kendo-ui/dropdownlist/index");
 
-	public void selectItemInCustomDropdown(String ParentXpath, String ChildXpath, String ExpectedItem) {
+		selectItemInCustomDropdown("//span[@aria-owns ='color_listbox']", "//ul[@id='color_listbox']//li", "Orange");
+		Assert.assertTrue(driver.findElement(By.xpath("//span[@aria-owns ='color_listbox']//span[@class='k-input' and text() ='Orange']")).isDisplayed());
+		Thread.sleep(3000);
+
+	}
+
+	public void selectItemInCustomDropdown(String parentXpath, String childXpath, String expectedItem) {
 		// Click vao Dropdown
-		WebElement element = driver.findElement(By.xpath(ParentXpath));
+		WebElement element = driver.findElement(By.xpath(parentXpath));
+		JavaExecutor.executeScript("arguments[0].scrollIntoView(true);", element);
 		element.click();
 		// Cho tat ca phan tu vao list
-		List<WebElement> childlist = driver.findElements(By.xpath(ChildXpath));
+		List<WebElement> childlist = driver.findElements(By.xpath(childXpath));
 
 		// Wait de tat ca cac phan tu trong list hien thi
 		waitExplicit.until(ExpectedConditions.visibilityOfAllElements(childlist));
 
 		// Tao vong lap for de kiem tra list cac phan tu sau do get text
-		/* Cach 1: for(int i = 0 ; i <childlist.size(); i ++) {	
-		}*/
-		
-		for(WebElement CheckChild : childlist) {
+		/*
+		 * Cach 1: for(int i = 0 ; i <childlist.size(); i ++) { }
+		 */
+
+		for (WebElement CheckChild : childlist) {
 			String TextItem = CheckChild.getText();
-			
+			System.out.println("Text in dropdown =" + TextItem);
+			if (TextItem.equals(expectedItem)) {
+				JavaExecutor.executeScript("arguments[0].scrollIntoView(true);", CheckChild);
+				CheckChild.click();
+
+			}
 		}
-	}
-		
-		
-		
-		
-		
-		
-		
-		
+
 	}
 
 	@AfterClass
