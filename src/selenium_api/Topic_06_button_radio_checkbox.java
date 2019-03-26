@@ -75,9 +75,14 @@ public class Topic_06_button_radio_checkbox {
 		Assert.assertTrue(driver.findElement(By.xpath("//p[@id='result' and text() = 'You clicked an alert successfully ']")).isDisplayed());
 		}
 
+	
+	
 	@AfterClass
 	public void afterClass() {
 		driver.quit();
 	}
 
 }
+
+
+
